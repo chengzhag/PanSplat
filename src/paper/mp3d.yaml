@@ -1,0 +1,5 @@
+num_render_frames: 30
+wobble_radius: 0.5
+test_datasets:
+  - name: m3d
+    dis: 0.5

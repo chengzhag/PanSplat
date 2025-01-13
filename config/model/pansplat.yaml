@@ -1,0 +1,3 @@
+defaults:
+  - encoder: pansplat_enc
+  - decoder: splatting_cuda

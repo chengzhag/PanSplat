@@ -1,0 +1,24 @@
+defaults:
+  - view_sampler: bounded
+
+name: insta360
+roots: [datasets/insta360]
+make_baseline_1: false
+augment: true
+
+image_shape: [256, 512]
+background_color: [0.0, 0.0, 0.0]
+cameras_are_circular: false
+
+baseline_epsilon: 1e-3
+max_fov: 100.0
+
+skip_bad_shape: true
+near: .45
+far: 50.
+baseline_scale_bounds: false
+shuffle_val: false
+test_chunk_interval: 1
+train_times_per_scene: 1000
+
+cache_images: true

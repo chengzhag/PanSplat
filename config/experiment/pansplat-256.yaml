@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - /model: pansplat
+  - override /loss: [mse, lpips, mvdepth]
+
+wandb:
+  name: pansplat
+  tags: [pansplat, mp3d, 256x512]
+
+data_loader:
+  train:
+    batch_size: 6

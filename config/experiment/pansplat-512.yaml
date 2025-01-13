@@ -1,0 +1,22 @@
+# @package _global_
+
+defaults:
+  - /model: pansplat
+  - override /loss: [mse, lpips, mvdepth]
+
+wandb:
+  name: pansplat
+  tags: [pansplat, mp3d, 512x1024]
+
+data_loader:
+  train:
+    batch_size: 2
+
+trainer:
+  max_epochs: 5
+
+model:
+  weights_path: logs/dc04xw6p/checkpoints/epoch_9-step_33258.ckpt
+
+dataset:
+  image_shape: [512, 1024]

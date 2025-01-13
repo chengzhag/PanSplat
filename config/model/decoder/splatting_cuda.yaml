@@ -1,0 +1,3 @@
+name: splatting_cuda
+view_batch: 20
+super_sampling: 1.

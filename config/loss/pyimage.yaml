@@ -1,0 +1,35 @@
+pyimage:
+  gaussian_head:
+    num_surfaces: 1
+    gaussians_per_pixel: 1
+    opacity_mapping:
+      initial: 0.0
+      final: 0.0
+      warm_up: 1
+    wo_pgs: false
+    wo_pgs_res: true
+    gh_mvs_scale_factor: 1
+    unify_gh_res: true
+    wo_disp_dens_refine: true
+    wo_fibo_gs: false
+    wo_sh_res: false
+    wo_feat: false
+    fibo_mlp_layers: 1
+    gh_cnn_layers: 2
+    patchs_height: 1
+    patchs_width: 1
+    gaussian_adapter:
+      gaussian_scale_min: 0.5
+      gaussian_scale_max: 15.0
+      sh_degree: 4
+    deferred_blend: true
+  decoder:
+    name: splatting_cuda
+    view_batch: 20
+    super_sampling: 1.
+  mse:
+    weight: 1.0
+  lpips:
+    weight: 0.05
+    apply_after_step: 0
+  gamma: 0.9

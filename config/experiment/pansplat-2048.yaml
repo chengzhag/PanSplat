@@ -1,0 +1,41 @@
+# @package _global_
+
+defaults:
+  - /model: pansplat
+  - override /loss: [mse, lpips]
+
+wandb:
+  name: pansplat
+  tags: [pansplat, mp3d, 2048x4096]
+
+data_loader:
+  train:
+    batch_size: 1
+
+trainer:
+  max_epochs: 3
+  val_check_interval: 0.5
+
+model:
+  weights_path: logs/nvpl49ge/checkpoints/epoch_4-step_49756.ckpt
+  encoder:
+    gaussian_head:
+      patchs_height: 4
+      patchs_width: 4
+    freeze_mvs: true
+  decoder:
+    view_batch: 3
+
+dataset:
+  image_shape: [2048, 4096]
+  test_datasets:
+    - name: m3d
+      dis: 0.1
+    - name: m3d
+      dis: 0.25
+    - name: m3d
+      dis: 0.5
+    - name: m3d
+      dis: 0.75
+    - name: m3d
+      dis: 1.0

@@ -1,0 +1,37 @@
+# @package _global_
+
+defaults:
+  - /model: pansplat
+  - override /loss: [mse, lpips]
+  - override /dataset: 360loc
+
+wandb:
+  name: pansplat-360loc-sep_render2
+  tags: [pansplat, 360loc, 2048x4096]
+
+data_loader:
+  train:
+    batch_size: 1
+
+trainer:
+  max_epochs: 100
+  val_check_interval: null
+  check_val_every_n_epoch: 10
+
+model:
+  weights_path: logs/037d1dg1/checkpoints/epoch_199-step_8776.ckpt
+  encoder:
+    gaussian_head:
+      patchs_height: 4
+      patchs_width: 4
+      deferred_blend: true
+    freeze_mvs: true
+  decoder:
+    view_batch: 3
+
+dataset:
+  image_shape: [2048, 4096]
+  cache_images: false
+  train_times_per_scene: 10
+  view_sampler:
+    warm_up_steps: 1000

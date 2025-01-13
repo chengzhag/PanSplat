@@ -1,0 +1,27 @@
+# @package _global_
+
+defaults:
+  - /model: pansplat
+  - override /loss: [mse, lpips, pyimage]
+  - override /dataset: 360loc
+
+wandb:
+  name: pansplat-360loc-sep_render2
+  tags: [pansplat, 360loc, 512x1024]
+
+data_loader:
+  train:
+    batch_size: 2
+
+trainer:
+  max_epochs: 5
+  val_check_interval: 0.5
+
+model:
+  weights_path: logs/nvpl49ge/checkpoints/epoch_4-step_49756.ckpt
+  encoder:
+    gaussian_head:
+      deferred_blend: true
+
+dataset:
+  image_shape: [512, 1024]

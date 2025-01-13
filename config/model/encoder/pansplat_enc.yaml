@@ -1,0 +1,70 @@
+name: pansplat_enc
+
+fpn_stages: 4
+mvs_stages: 3
+fpn_max_height: 512
+
+num_depth_candidates: [128, 64, 32, 16]
+
+gaussian_head:
+  num_surfaces: 1
+  gaussians_per_pixel: 1
+  opacity_mapping:
+    initial: 0.0
+    final: 0.0
+    warm_up: 1
+  wo_pgs: false
+  wo_pgs_res: false
+  gh_mvs_scale_factor: null
+  unify_gh_res: false
+  wo_disp_dens_refine: false
+  wo_fibo_gs: false
+  wo_sh_res: false
+  wo_feat: false
+  fibo_mlp_layers: 1
+  gh_cnn_layers: 3
+  patchs_height: 1
+  patchs_width: 1
+  gaussian_adapter:
+    gaussian_scale_min: 0.5
+    gaussian_scale_max: 15.0
+    sh_degree: 4
+  deferred_blend: false
+
+d_feature: [128, 96, 64, 32]
+
+visualizer:
+  num_samples: 8
+  min_resolution: 256
+  export_ply: false
+
+# params for multi-view depth predictor
+unimatch_weights_path: "checkpoints/gmdepth-scale1-resumeflowthings-scannet-5d9d7964.pth"
+multiview_trans_attn_split: 2
+costvolume_unet_feat_dims: [128, 64, 32, 16]
+costvolume_unet_channel_mult: [1,1,1]
+costvolume_unet_attn_res: [4]
+shim_patch_size: 4
+
+# below are ablation settings, keep them as false for default model
+wo_backbone_cross_attn: false  # Table 3: w/o cross-view attention
+
+wo_gbp: true
+
+wo_mono_depth: false
+
+mono_depth:
+  num_layers: 18
+  equi_h: 512
+  equi_w: 1024
+  pretrained: false
+  max_depth: 10.0
+  fusion_type: cee
+  se_in_fusion: false
+  mono_uncertainty: false
+  mono_lowres_pred: false
+
+unifuse_pretrained_path: "checkpoints/unifuse_pretrained.pth"
+habitat_monodepth_path: "checkpoints/habitat_monodepth.pt"
+use_wrap_padding: true
+freeze_mvs: false
