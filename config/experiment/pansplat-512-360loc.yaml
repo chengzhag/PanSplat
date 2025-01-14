@@ -6,7 +6,7 @@ defaults:
   - override /dataset: 360loc
 
 wandb:
-  name: pansplat-360loc-sep_render2
+  name: pansplat-360loc
   tags: [pansplat, 360loc, 512x1024]
 
 data_loader:
