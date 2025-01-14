@@ -1,0 +1,76 @@
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 144
+  skip_frame: 16
+  end_frame: 304
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 576
+  skip_frame: 16
+  end_frame: 736
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 1702
+  skip_frame: 16
+  end_frame: 1862
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 3972
+  skip_frame: 16
+  end_frame: 4132
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 5959
+  skip_frame: 16
+  end_frame: 6119
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 7704
+  skip_frame: 16
+  end_frame: 7864
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 18444
+  skip_frame: 16
+  end_frame: 18604
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 21456
+  skip_frame: 16
+  end_frame: 21616
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 22560
+  skip_frame: 16
+  end_frame: 22720
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 23112
+  skip_frame: 16
+  end_frame: 23272
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "VID_20240922_102141_00_006"
+  start_frame: 27792
+  skip_frame: 16
+  end_frame: 27952
+  overlap_frame: 0
+  num_render_frames: 100

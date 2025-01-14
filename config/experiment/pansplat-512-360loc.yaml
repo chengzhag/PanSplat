@@ -18,7 +18,7 @@ trainer:
   val_check_interval: 0.5
 
 model:
-  weights_path: logs/nvpl49ge/checkpoints/epoch_4-step_49756.ckpt
+  weights_path: logs/nvpl49ge/checkpoints/last.ckpt
   encoder:
     gaussian_head:
       deferred_blend: true

@@ -99,18 +99,32 @@ def demo(cfg_dict: DictConfig):
 
     # load segmentation configuration
     name = cfg.dataset.name
+    if cfg.mode == "predict":
+        name += f"_{cfg.mode}"
     seg_cfg = f"src/paper/{name}.yaml"
     with open(seg_cfg, "r") as f:
         args = yaml.safe_load(f)
     fps = 24
 
-    if cfg.dataset.name == "mp3d":
+    if cfg.mode == "all":
+        dataset = get_dataset(cfg.dataset, "test", None)
+        arg = args
+        args = []
+        for scene in dataset.data:
+            arg["scene"] = scene.relative_to(cfg.dataset.roots[0])
+            args.append(arg.copy())
+    elif cfg.mode == "predict":
         cfg.dataset.view_sampler.test_times_per_scene = args.get('num_videos_per_scene', None)
+        if 'scenes' in args:
+            scenes = {k: [int(s.split('_')[0]) for s in v] for k, v in args['scenes'].items()}
+            cfg.dataset.view_sampler.chosen = scenes
         if 'test_datasets' in args:
             cfg.dataset.test_datasets = args['test_datasets']
         predict(args, model_wrapper, cfg, output_dir, fps)
-    else:
-        raise NotImplementedError
+        return
+
+    for arg in tqdm(args, desc="Rendering videos"):
+        render_video(arg, model_wrapper, cfg, output_dir, fps)
 
 
 def predict(args, model_wrapper, cfg, output_dir, fps):
@@ -223,6 +237,187 @@ def predict(args, model_wrapper, cfg, output_dir, fps):
 
         del gaussians_prob, near, far, context_extrinsics
         torch.cuda.empty_cache()
+
+
+def render_video(args, model_wrapper, cfg, output_dir, fps):
+    device = model_wrapper.device
+    cfg.dataset.overfit_to_scene = args["scene"]
+    all_frames = args["end_frame"] is None
+    if all_frames:
+        dataset = get_dataset(cfg.dataset, "test", None)
+        args["end_frame"] = dataset.total_frames - 1
+    num_batchs = (
+        args["end_frame"] - args["start_frame"] - args["overlap_frame"]
+    ) // (args["skip_frame"] - args["overlap_frame"])
+    if all_frames:
+        args["num_render_frames"] = args["num_render_frames"] * num_batchs
+
+    # load dataset
+    view_sampler_cfg = ViewSamplerSequenceCfg(
+        "sequence",
+        args["start_frame"],
+        args["skip_frame"],
+        num_batchs,
+        args["overlap_frame"],
+    )
+    cfg.dataset.view_sampler = view_sampler_cfg
+    dataset = get_dataset(cfg.dataset, "test", None)
+    dataset.load_images = False
+
+    # load context information
+    context_extrinsics = []
+    context_indices = []
+    for batch in tqdm(
+        dataset,
+        desc="Loading data",
+        leave=False,
+    ):
+        context_extrinsics.append(batch["context"]["extrinsics"])
+        context_indices.append(batch["context"]["index"])
+        scene_id = batch["scene"]
+    context_extrinsics = torch.stack(context_extrinsics)
+    context_indices = torch.stack(context_indices)
+    end_frame = context_indices.max()
+    context_indices = context_indices - context_indices.min()
+    context_locations = context_extrinsics[..., :3, 3]
+
+    # landmarks to associate target frames with context
+    _, landmark_orders = torch.unique(context_indices, return_inverse=True)
+    landmark_odometers = torch.zeros_like(landmark_orders, dtype=torch.float32)
+    odometer = 0.
+    last_landmark_location = context_locations[0, 0]
+    for i in range(1, landmark_orders.max() + 1):
+        landmark_location = context_locations[landmark_orders == i][0]
+        odometer += (landmark_location - last_landmark_location).norm()
+        landmark_odometers[landmark_orders == i] = odometer
+        last_landmark_location = landmark_location
+
+    # interpolate time
+    t = torch.linspace(0, 1, args["num_render_frames"], dtype=torch.float32)
+    if cfg.mode != "all":
+        t = (torch.cos(torch.pi * (t + 1)) + 1) / 2
+    target_odometers = t * odometer
+
+    # interpolate extrinsics
+    target_local_ts = []
+    target_indices = []
+    target_extrinsics = []
+    for batch_index, landmark_odometer in enumerate(landmark_odometers):
+        target_index = torch.where((target_odometers >= landmark_odometer[0]) & (target_odometers <= landmark_odometer[-1]))[0]
+        target_local_t = (target_odometers[target_index] - landmark_odometer[0]) / (landmark_odometer[1] - landmark_odometer[0])
+        target_indices.append(target_index)
+        target_local_ts.append(target_local_t)
+        if target_local_t.shape[0] > 0:
+            target_extrinsics.append(
+                interpolate_extrinsics(
+                    context_extrinsics[batch_index, 0],
+                    context_extrinsics[batch_index, 1],
+                    target_local_t,
+                )
+            )
+        else:
+            target_extrinsics.append(torch.empty(0, 4, 4))
+
+    # identify frames to output for each batch
+    output_indices = []
+    for batch_index in range(len(target_indices) - 1):
+        output_indices.append(
+            target_indices[batch_index][
+                target_indices[batch_index] < target_indices[batch_index + 1][0]
+            ]
+            if target_indices[batch_index + 1].shape[0] > 0
+            else target_indices[batch_index]
+        )
+    output_indices.append(target_indices[-1])
+
+    # render frames
+    blend_ts_cache = defaultdict(list)
+    blend_frame_cache = defaultdict(list)
+    nearest_frame_cache = defaultdict(list)
+    nearest_dis_cache = defaultdict(list)
+    dataset.load_images = True
+    output_dir = output_dir / f"{scene_id}-{args['start_frame']}-{end_frame}"
+    output_dir.mkdir(parents=True, exist_ok=True)
+    output_file = output_dir/"output"
+    out = cv2.VideoWriter(
+        output_file.with_suffix(".avi"),
+        cv2.VideoWriter_fourcc(*"XVID"),
+        fps,
+        dataset.cfg.image_shape[::-1],
+    )
+    nearst_file = output_dir/"nearest"
+    nearest = cv2.VideoWriter(
+        nearst_file.with_suffix(".avi"),
+        cv2.VideoWriter_fourcc(*"XVID"),
+        fps,
+        dataset.cfg.image_shape[::-1],
+    )
+    for target_index, target_extrinsic, target_local_t, output_index, batch in tqdm(
+        zip(target_indices, target_extrinsics, target_local_ts, output_indices, dataset),
+        desc="Rendering segmentation",
+        total=num_batchs,
+        leave=False,
+    ):
+        if target_extrinsic.shape[0] == 0:
+            continue
+
+        # inference and render frames
+        batch = default_collate([batch])
+        batch["context"] = apply_to_collection(batch["context"], Tensor, lambda x: x.to(device))
+        gaussians_prob = model_wrapper.encoder(batch["context"], inference=True)["gaussians"]["gaussians"]
+
+        target_extrinsic = target_extrinsic.to(device)
+        target_extrinsic = target_extrinsic.unsqueeze(0)
+
+        num_frames = target_extrinsic.shape[1]
+        near = repeat(batch["context"]["near"][:, 0], "b -> b v", v=num_frames)
+        far = repeat(batch["context"]["far"][:, 0], "b -> b v", v=num_frames)
+        context_extrinsics = batch["context"]["extrinsics"]
+        context_images = batch["context"]["image"].cpu()
+        del batch
+        output_prob = model_wrapper.decoder.render_pano(
+            gaussians_prob, target_extrinsic, near, far, context_extrinsics=context_extrinsics, cpu=True
+        )
+        batch_frame = output_prob['color'][0].cpu()
+        for index, frame, local_t in zip(target_index, batch_frame, target_local_t):
+            blend_frame_cache[index.item()].append(frame)
+            blend_ts_cache[index.item()].append(local_t)
+            context_idx = int(local_t > 1 - local_t)
+            context_dis = local_t if context_idx == 0 else 1 - local_t
+            nearest_frame_cache[index.item()].append(context_images[0, context_idx])
+            nearest_dis_cache[index.item()].append(context_dis)
+
+        del output_prob, gaussians_prob, target_extrinsic, near, far, context_extrinsics
+        torch.cuda.empty_cache()
+
+        # blend and output frames
+        for index in output_index:
+            blend_frames = torch.stack(blend_frame_cache.pop(index.item()))
+            blend_ts = torch.tensor(blend_ts_cache.pop(index.item()))
+            blend_distances = 0.5 - (blend_ts - 0.5).abs()
+            total_weight = blend_distances.sum()
+            blend_weights = blend_distances / total_weight if total_weight > 0 else torch.ones_like(blend_distances)
+            blend_frames = blend_frames * blend_weights[:, None, None, None]
+            blend_frame = blend_frames.sum(0)
+            blend_frame = (blend_frame.clip(min=0, max=1) * 255).type(torch.uint8).cpu().numpy()
+            blend_frame = rearrange(blend_frame, "c h w -> h w c")
+            blend_frame = cv2.cvtColor(blend_frame, cv2.COLOR_RGB2BGR)
+            out.write(blend_frame)
+
+            context_frames = torch.stack(nearest_frame_cache.pop(index.item()))
+            context_dis = torch.tensor(nearest_dis_cache.pop(index.item()))
+            context_frame = context_frames[context_dis.argmin()]
+            context_frame = (context_frame.clip(min=0, max=1) * 255).type(torch.uint8).cpu().numpy()
+            context_frame = rearrange(context_frame, "c h w -> h w c")
+            context_frame = cv2.cvtColor(context_frame, cv2.COLOR_RGB2BGR)
+            nearest.write(context_frame)
+
+    out.release()
+    nearest.release()
+    cmd = f"ffmpeg -i {output_file.with_suffix('.avi')} -vcodec libx264 {output_file.with_suffix('.mp4')}"
+    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
+    cmd = f"ffmpeg -i {nearst_file.with_suffix('.avi')} -vcodec libx264 {nearst_file.with_suffix('.mp4')}"
+    subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, shell=True)
 
 
 if __name__ == "__main__":

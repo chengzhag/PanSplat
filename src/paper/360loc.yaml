@@ -1,0 +1,174 @@
+- scene: "atrium/mapping/daytime_360_0"
+  start_frame: 0
+  skip_frame: 3
+  end_frame: 31
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/mapping/daytime_360_0"
+  start_frame: 68
+  skip_frame: 3
+  end_frame: 99
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/mapping/daytime_360_0"
+  start_frame: 133
+  skip_frame: 3
+  end_frame: 164
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/mapping/daytime_360_0"
+  start_frame: 228
+  skip_frame: 3
+  end_frame: 259
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/mapping/daytime_360_0"
+  start_frame: 341
+  skip_frame: 3
+  end_frame: 372
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/mapping/daytime_360_0"
+  start_frame: 515
+  skip_frame: 3
+  end_frame: 546
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/daytime_360_1"
+  start_frame: 31
+  skip_frame: 3
+  end_frame: 62
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/daytime_360_1"
+  start_frame: 107
+  skip_frame: 3
+  end_frame: 138
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/daytime_360_2"
+  start_frame: 90
+  skip_frame: 3
+  end_frame: 121
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/daytime_360_2"
+  start_frame: 141
+  skip_frame: 3
+  end_frame: 172
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/daytime_360_2"
+  start_frame: 234
+  skip_frame: 3
+  end_frame: 265
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_1"
+  start_frame: 0
+  skip_frame: 3
+  end_frame: 31
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_1"
+  start_frame: 81
+  skip_frame: 3
+  end_frame: 112
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_1"
+  start_frame: 131
+  skip_frame: 3
+  end_frame: 162
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_1"
+  start_frame: 195
+  skip_frame: 3
+  end_frame: 226
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_1"
+  start_frame: 289
+  skip_frame: 3
+  end_frame: 320
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_1"
+  start_frame: 384
+  skip_frame: 3
+  end_frame: 415
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_1"
+  start_frame: 487
+  skip_frame: 3
+  end_frame: 518
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_1"
+  start_frame: 558
+  skip_frame: 3
+  end_frame: 589
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_1"
+  start_frame: 592
+  skip_frame: 3
+  end_frame: 623
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_2"
+  start_frame: 234
+  skip_frame: 3
+  end_frame: 265
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_2"
+  start_frame: 274
+  skip_frame: 3
+  end_frame: 305
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_2"
+  start_frame: 447
+  skip_frame: 3
+  end_frame: 478
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_2"
+  start_frame: 528
+  skip_frame: 3
+  end_frame: 559
+  overlap_frame: 0
+  num_render_frames: 100
+
+- scene: "atrium/query_360/nighttime_360_2"
+  start_frame: 563
+  skip_frame: 3
+  end_frame: 594
+  overlap_frame: 0
+  num_render_frames: 100

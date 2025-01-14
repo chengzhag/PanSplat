@@ -1,0 +1,13 @@
+num_videos_per_scene: 100
+num_render_frames: 30
+wobble_radius: 0.5
+scenes:
+  atrium-daytime_360_0:
+    - '000501_000504'
+  atrium-daytime_360_1:
+    - '000050_000053'
+  atrium-daytime_360_2: []
+  atrium-nighttime_360_1:
+    - '000093_000096'
+    - '000300_000303'
+  atrium-nighttime_360_2: []

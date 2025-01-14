@@ -19,7 +19,7 @@ trainer:
   check_val_every_n_epoch: 20
 
 model:
-  weights_path: logs/ls933m5x/checkpoints/epoch_4-step_32496.ckpt
+  weights_path: logs/ls933m5x/checkpoints/last.ckpt
   encoder:
     gaussian_head:
       patchs_height: 2

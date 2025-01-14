@@ -29,7 +29,7 @@ We use wandb to log and visualize the training process. You can create an accoun
 wandb login
 ```
 
-## Demo
+## Quick Demo on Synthetic Data
 
 You can download the pretrained checkpoints [last.ckpt](https://monashuni-my.sharepoint.com/:u:/g/personal/cheng_zhang_monash_edu/EUSd23tEyjpIg-A6YMdrV-gBMSHG9hLk5zYC_Aq80csDig?e=0gMnFr) (trained on the Matterport3D dataset at 512 × 1024 resolution) and put it in the `logs/nvpl49ge/checkpoints` folder. Then run the following command to test the model:
     
@@ -68,8 +68,29 @@ We use the [360Loc](https://github.com/HuajianUP/360Loc?tab=readme-ov-file) data
 We provide two sample videos for testing cross-dataset generalization. Please download `insta360.tar` from [link](https://monashuni-my.sharepoint.com/:f:/g/personal/cheng_zhang_monash_edu/En3qfWTyLaNGvQnqPcA8xLYBzr3kOReqAbbgINsWXkwaMA?e=DH1M5x) and unzip it to the `datasets` folder.
 
 <details>
-<summary>Use your own video</summary>
-Coming soon...
+<summary>Use your own video...</summary>
+
+We use [stella_vslam](https://github.com/stella-cv/stella_vslam?tab=readme-ov-file), a community fork of [xdspacelab/openvslam](https://github.com/xdspacelab/openvslam), to extract the camera poses from self-captured videos. You can follow the [official guide](https://stella-cv.readthedocs.io/en/latest/installation.html) to install the stella_vslam. We recommend [installing with SocketViewer](https://stella-cv.readthedocs.io/en/latest/installation.html#requirements-for-socketviewer) and [set up the SocketViewer](https://stella-cv.readthedocs.io/en/latest/installation.html#server-setup-for-socketviewer) for visualizing the SLAM process on a remote server.
+Then change to the build directory of stella_vslam following this [link](https://stella-cv.readthedocs.io/en/latest/simple_tutorial.html#simple-tutorial) and download the ORB vocabulary:
+      
+```bash
+curl -sL "https://github.com/stella-cv/FBoW_orb_vocab/raw/main/orb_vocab.fbow" -o orb_vocab.fbow
+```
+
+After that, please put your video in a separate folder under the `datasets/insta360` folder and rename it to `video.mp4`. You can run the following command under the directory of video folder to run SLAM mapping:
+
+```bash
+~/lib/stella_vslam_examples/build/run_video_slam -v ~/lib/stella_vslam_examples/build/orb_vocab.fbow -m video.mp4 -c ../equirectangular.yaml --frame-skip 1 --no-sleep --map-db-out map.msg --viewer socket_publisher --eval-log-dir ./ --auto-term
+```
+
+Finally, you can run the following command to extract the camera poses by running localization only:
+
+```bash
+~/lib/stella_vslam_examples/build/run_video_slam --disable-mapping -v ~/lib/stella_vslam_examples/build/orb_vocab.fbow -m video.mp4 -c ../equirectangular.yaml --frame-skip 1 --no-sleep --map-db-in map.msg --viewer socket_publisher --eval-log-dir ./ --auto-term
+```
+
+The camera poses will be saved in the `frame_trajectory.txt` file. You can then follow the [Demo on Real-World Data](#demo-on-real-world-data) section using the insta360 dataset command to test the model on your own video.
+
 </details>
 <br>
 
@@ -81,7 +102,9 @@ We use part of the pretrained UniMatch weights from MVSplat and the pretrained p
 
 ### Train on Matterport3D
 
-We train the model on the Matterport3D dataset starting from a low resolution and fine-tune it at higher resolutions. You can run the following command to train the model at 256 × 512 resolution:
+We train the model on the Matterport3D dataset starting from a low resolution and fine-tune it at higher resolutions. If you are looking to fine-tune the model on 360Loc dataset, you can stop at the 512 × 1024 resolution. Or instead, you can skip this part by downloading the pretrained checkpoints [last.ckpt](https://monashuni-my.sharepoint.com/:u:/g/personal/cheng_zhang_monash_edu/EUSd23tEyjpIg-A6YMdrV-gBMSHG9hLk5zYC_Aq80csDig?e=0gMnFr) and put it in the `logs/nvpl49ge/checkpoints` folder.
+
+Please first run the following command to train the model at 256 × 512 resolution:
 
 ```bash
 python -m src.main +experiment=pansplat-256 mode=train
@@ -116,7 +139,9 @@ python -m src.main +experiment=pansplat-2048 mode=train
 
 ### Fine-tune on 360Loc
 
-We fine-tune the model on the 360Loc dataset from the weights trained on the Matterport3D dataset at 512 × 1024 resolution. Please update the `model.weights_path` parameter of `config/pansplat-512-360loc.yaml` then run the following command:
+We fine-tune the model on the 360Loc dataset from the weights trained on the Matterport3D dataset at 512 × 1024 resolution. If you want to skip this part, you can find the checkpoints [here](https://monashuni-my.sharepoint.com/:f:/g/personal/cheng_zhang_monash_edu/EuGRXmSPcmpLhzLr49KPpB8BNxoQATnMJjwJSN_d6THDjA?e=Ar96F4). We provide checkpoints for 512 × 1024 (`ls933m5x`) and 2048 × 4096 (`115k3hnu`) resolutions.
+
+Please update the `model.weights_path` parameter of `config/pansplat-512-360loc.yaml` to the path of the last checkpoint of the Matterport3D training at 512 × 1024 resolution, then run the following command:
 
 ```bash
 python -m src.main +experiment=pansplat-512-360loc mode=train
@@ -130,6 +155,42 @@ python -m src.main +experiment=pansplat-2048-360loc mode=train
 ```
 
 Remember to update the `model.weights_path` parameter in the corresponding config files before running the commands.
+
+## Demo on Real-World Data
+
+First please make sure you have followed the steps in the [Fine-tune on 360Loc](#fine-tune-on-360loc) section to have the checkpoints ready.
+You can then test the model on the 360Loc or Insta360 dataset by running the following command:
+
+```bash
+python -m src.paper.demo +experiment=pansplat-512-360loc ++model.weights_path=logs/ls933m5x/checkpoints/last.ckpt mode=predict
+python -m src.paper.demo +experiment=pansplat-512-360loc ++model.weights_path=logs/ls933m5x/checkpoints/last.ckpt mode=predict dataset=insta360
+```
+
+**Hint:** You can replace the `model.weights_path` parameter with what you have fine-tuned.
+
+The output will be saved in the folder with the format `outputs/2025-01-13/16-56-04`:
+![atrium-daytime_360_1-50_53](images/atrium-daytime_360_1-50_53.gif)
+![VID_20240914_103257_00_005-9930_9946](images/VID_20240914_103257_00_005-9930_9946.gif)
+
+
+For the 2048 × 4096 resolution model, you can run the following command:
+
+```bash
+python -m src.paper.demo +experiment=pansplat-2048-360loc ++model.weights_path=logs/115k3hnu/checkpoints/last.ckpt mode=predict
+python -m src.paper.demo +experiment=pansplat-2048-360loc ++model.weights_path=logs/115k3hnu/checkpoints/last.ckpt mode=predict dataset=insta360
+```
+
+Additionally, we provide commands for longer image sequences inputs:
+
+```bash
+python -m src.paper.demo +experiment=pansplat-512-360loc ++model.weights_path=logs/ls933m5x/checkpoints/last.ckpt
+python -m src.paper.demo +experiment=pansplat-512-360loc ++model.weights_path=logs/ls933m5x/checkpoints/last.ckpt dataset=insta360
+python -m src.paper.demo +experiment=pansplat-2048-360loc ++model.weights_path=logs/115k3hnu/checkpoints/last.ckpt
+python -m src.paper.demo +experiment=pansplat-2048-360loc ++model.weights_path=logs/115k3hnu/checkpoints/last.ckpt dataset=insta360
+```
+
+Example output:
+![VID_20240922_102141_00_006-21456-21616](images/VID_20240922_102141_00_006-21456-21616.gif)
 
 ## Citation
 
