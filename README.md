@@ -70,8 +70,20 @@ We provide two sample videos for testing cross-dataset generalization. Please do
 <details>
 <summary>Use your own video...</summary>
 
-We use [stella_vslam](https://github.com/stella-cv/stella_vslam?tab=readme-ov-file), a community fork of [xdspacelab/openvslam](https://github.com/xdspacelab/openvslam), to extract the camera poses from self-captured videos. You can follow the [official guide](https://stella-cv.readthedocs.io/en/latest/installation.html) to install the stella_vslam. We recommend [installing with SocketViewer](https://stella-cv.readthedocs.io/en/latest/installation.html#requirements-for-socketviewer) and [set up the SocketViewer](https://stella-cv.readthedocs.io/en/latest/installation.html#server-setup-for-socketviewer) for visualizing the SLAM process on a remote server.
-Then change to the build directory of stella_vslam following this [link](https://stella-cv.readthedocs.io/en/latest/simple_tutorial.html#simple-tutorial) and download the ORB vocabulary:
+We use [stella_vslam](https://github.com/stella-cv/stella_vslam?tab=readme-ov-file), a community fork of [xdspacelab/openvslam](https://github.com/xdspacelab/openvslam), to extract the camera poses from self-captured videos. You can follow the [official guide](https://stella-cv.readthedocs.io/en/latest/installation.html) to install the stella_vslam.
+Before building `stella_vslam_examples`, please replace the below code in the `src/run_video_slam.cc` file:
+```cpp
+slam->save_frame_trajectory(eval_log_dir + "/frame_trajectory.txt", "TUM");
+slam->save_keyframe_trajectory(eval_log_dir + "/keyframe_trajectory.txt", "TUM");
+```
+with:
+```cpp
+slam->save_frame_trajectory(eval_log_dir + "/frame_trajectory.txt", "KITTI");
+slam->save_keyframe_trajectory(eval_log_dir + "/keyframe_trajectory.txt", "KITTI");
+```
+so that the camera poses are saved in the KITTI format.
+We recommend [installing with SocketViewer](https://stella-cv.readthedocs.io/en/latest/installation.html#requirements-for-socketviewer) and [set up the SocketViewer](https://stella-cv.readthedocs.io/en/latest/installation.html#server-setup-for-socketviewer) for visualizing the SLAM process on a remote server.
+After building the stella_vslam, please change to the build directory following this [link](https://stella-cv.readthedocs.io/en/latest/simple_tutorial.html#simple-tutorial) and download the ORB vocabulary:
       
 ```bash
 curl -sL "https://github.com/stella-cv/FBoW_orb_vocab/raw/main/orb_vocab.fbow" -o orb_vocab.fbow
