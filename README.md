@@ -9,7 +9,7 @@ Cheng Zhang, Haofei Xu, Qianyi Wu, Camilo Cruz Gambardella, Dinh Phung, Jianfei 
 
 ## Introduction
 
-This repo contains training, testing, evaluation code of our arXiv 2024 paper.
+This repo contains training, testing, evaluation code of our CVPR 2025 paper.
 
 ## Installation
 
