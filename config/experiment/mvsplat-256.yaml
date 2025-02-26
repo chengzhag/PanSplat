@@ -1,0 +1,13 @@
+# @package _global_
+
+defaults:
+  - /model: mvsplat
+  - override /loss: [mse, lpips]
+
+wandb:
+  name: mvsplat
+  tags: [mvsplat, mp3d, 256x512]
+
+data_loader:
+  train:
+    batch_size: 6

@@ -204,6 +204,68 @@ python -m src.paper.demo +experiment=pansplat-2048-360loc ++model.weights_path=l
 Example output:
 ![VID_20240922_102141_00_006-21456-21616](images/VID_20240922_102141_00_006-21456-21616.gif)
 
+## Reproducing the Results
+
+### MVSplat Baseline
+
+We also provide the MVSplat baseline for comparison. You can put the [weights](https://monashuni-my.sharepoint.com/:u:/g/personal/cheng_zhang_monash_edu/EZE94CzWywVKguiHCylzf6oB0bm-NHZCUzvtUshMlvKvpg?e=uhmNfV) trained on Matterport3D dataset in `logs/qbn2ltku/checkpoints` and run the following command to test the model:
+
+```bash
+python -m src.main +experiment=mvsplat-512 ++model.weights_path=logs/qbn2ltku/checkpoints/last.ckpt mode=test test.compute_scores=true wandb.name=test_mvsplat
+```
+
+Or you can train the model yourself by running the following command:
+
+```bash
+python -m src.main +experiment=mvsplat-256 mode=train
+python -m src.main +experiment=mvsplat-512 mode=train
+python -m src.main +experiment=mvsplat-512-360loc mode=train
+```
+
+Similarly, don't forget to update the `model.weights_path` parameter in the corresponding config files before fine-tuning.
+The last command will fine-tune the model on the 360Loc dataset for comparison on real-world data in the [Images Quality vs. Frame Distance](#images-quality-vs-frame-distance) section.
+
+### GPU Consumption
+
+We provide a script to reproduce Figure G.1 for GPU consumption comparison. An NVIDIA A100 GPU is required to run the script:
+
+```bash
+python -m src.paper.benchmark_exp
+python -m src.paper.benchmark_fig
+```
+
+The experiment is configured in the `config/benchmark.yaml` file, with arguments for each ablation study experiment. You can use the training commands in [Train on Matterport3D](#train-on-matterport3d) with these augments to reproduce the ablation study results.
+
+After automated benchmarking, the intermediate results and figures will be saved in the `outputs/benchmark` folder.
+
+An example is shown below:
+
+<img src="images/benchmark_ab.png" alt="benchmark_ab" width="400">
+
+### Images Quality vs. Frame Distance
+
+We provide a script to reproduce Figure F.1 for images quality vs. frame distance comparison. Before drawing the figure, please first prepare evaluation results on the Insta360 dataset:
+```bash
+python -m src.main +experiment=casuni-512-360loc ++model.weights_path=logs/ls933m5x/checkpoints/last.ckpt mode=test test.compute_scores=true wandb.name=test_pansplat dataset=insta360
+python -m src.main +experiment=pansplat-512-360loc ++model.weights_path=logs/l8l2j6pb/checkpoints/last.ckpt mode=test test.compute_scores=true wandb.name=test_pansplat-wo_defbl model.encoder.gaussian_head.deferred_blend=false dataset=insta360
+python -m src.main +experiment=mvsplat-512-360loc ++model.weights_path=logs/3q5jp96j/checkpoints/last.ckpt mode=test test.compute_scores=true wandb.name=test_mvsplat dataset=insta360
+```
+
+You can download the [checkpoints](https://monashuni-my.sharepoint.com/personal/cheng_zhang_monash_edu/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fcheng%5Fzhang%5Fmonash%5Fedu%2FDocuments%2Fprojects%2FPanSplat%2Fshare%2Flogs&ga=1) or use your own checkpoints from [Fine-tune on 360Loc](#fine-tune-on-360loc) and [MVSplat Baseline](#mvsplat-baseline) sections. For PanSplat without deferred blending, please follow [Fine-tune on 360Loc](#fine-tune-on-360loc) with the `model.encoder.gaussian_head.deferred_blend=false` parameter to train the model. Don't forget to update the experiment `id` in `src/paper/frame_vs_metric.py` if you are using your own checkpoints.
+
+Finally, you can run the following command to draw the figure:
+
+```bash
+python -m src.paper.frame_vs_metric
+```
+
+The figure will be saved in the `outputs/frame_vs_metric` folder.
+
+An example is shown below:
+
+![frame_vs_metric](images/frame_vs_metric.png)
+
+
 ## Citation
 
 If you find our work helpful, please consider citing:

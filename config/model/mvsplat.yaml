@@ -1,0 +1,3 @@
+defaults:
+  - encoder: mvsplat_enc
+  - decoder: splatting_cuda

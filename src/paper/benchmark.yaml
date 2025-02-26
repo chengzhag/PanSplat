@@ -1,0 +1,58 @@
+output_dir: "outputs/benchmark"
+experiments:
+  pansplat-wo_defbp2:
+    name: ["w/ Deferred BP (1 step)"]
+    exp: "pansplat-2048-360loc"
+    args:
+      - "++model.wo_defbp2=true"
+      - "model.decoder.view_batch=20"
+    figure: ["benchmark_ab"]
+    marker: '>'
+    color: 8
+  pansplat-16tiles:
+    name: ["PanSplat + Deferred BP", "w/ Deferred BP (16 tiles)"]
+    exp: "pansplat-2048-360loc"
+    figure: ["benchmark", "benchmark_ab"]
+    marker: 's'
+    color: 0
+  pansplat-4tiles:
+    name: ["w/ Deferred BP (4 tiles)"]
+    exp: "pansplat-1024-360loc"
+    figure: ["benchmark_ab"]
+    marker: 'o'
+    color: 1
+    oom_offset: 4
+  pansplat-wo_defbp:
+    name: ["PanSplat", "Full"]
+    exp: "pansplat-512-360loc"
+    figure: ["benchmark", "benchmark_ab"]
+    marker: 'D'
+    color: 2
+    oom_offset: 0
+  pansplat-wo_fibo:
+    name: ["w/o Fibo"]
+    exp: "pansplat-512-360loc"
+    args:
+      - "model.encoder.gaussian_head.wo_fibo_gs=true"
+    figure: ["benchmark_ab"]
+    marker: '^'
+    color: 3
+    oom_offset: 3
+  pansplat-wo_pgs:
+    name: ["w/o 3DGP"]
+    exp: "pansplat-512-360loc"
+    args:
+      - "model.encoder.gaussian_head.wo_pgs=true"
+      - "model.encoder.mvs_stages=1"
+      - "model.encoder.fpn_stages=3"
+    figure: ["benchmark_ab"]
+    marker: 'v'
+    color: 4
+    oom_offset: 2
+  mvsplat:
+    name: ["MVSplat"]
+    exp: "mvsplat-512-360loc"
+    figure: ["benchmark"]
+    marker: '<'
+    color: 7
+    oom_offset: 1

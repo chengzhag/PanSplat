@@ -1,0 +1,24 @@
+# @package _global_
+
+defaults:
+  - /model: mvsplat
+  - override /loss: [mse, lpips]
+  - override /dataset: 360loc
+
+wandb:
+  name: mvsplat-360loc
+  tags: [mvsplat, 360loc, 512x1024]
+
+data_loader:
+  train:
+    batch_size: 1
+
+trainer:
+  max_epochs: 5
+  val_check_interval: 0.5
+
+model:
+  weights_path: logs/qbn2ltku/checkpoints/epoch_9-step_199712.ckpt
+
+dataset:
+  image_shape: [512, 1024]
