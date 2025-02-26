@@ -5,6 +5,8 @@ Cheng Zhang, Haofei Xu, Qianyi Wu, Camilo Cruz Gambardella, Dinh Phung, Jianfei 
 
 ### [Project Page](https://chengzhag.github.io/publication/pansplat) | [Paper](http://arxiv.org/abs/2412.12096)
 
+### [Short Video](https://youtu.be/R3qIzL77ZSc) | [Full Video](https://youtu.be/77G9AQkweg0) | [Interactive Demo](https://youtu.be/9bKZA2zxAbw)
+
 ![teaser](images/teaser.png)
 
 ## Introduction
@@ -43,6 +45,7 @@ The code will use the sample images in the `datasets/pano_grf` folder:
 
 The output will be saved in the folder with the format `outputs/2025-01-13/16-56-04`:
 ![demo_output_video](images/demo_output_video.gif)
+(Video file [here](images/demo_output_video.mp4))
 
 Additionally, we provide a fine-tuned checkpoint [last.ckpt](https://monashuni-my.sharepoint.com/:u:/g/personal/cheng_zhang_monash_edu/Ee1xYAdyL3xOoGZdyMi4fPMBnq5n-XXQmGZvSrirAhrjGA?e=mU2pAR) (fine-tuned on the Matterport3D dataset at 2048 × 4096 resolution) for 4K panorama synthesis. You can put it in the `logs/hxlad5nq/checkpoints` folder and run the following command to test the model:
 
@@ -182,8 +185,9 @@ python -m src.paper.demo +experiment=pansplat-512-360loc ++model.weights_path=lo
 
 The output will be saved in the folder with the format `outputs/2025-01-13/16-56-04`:
 ![atrium-daytime_360_1-50_53](images/atrium-daytime_360_1-50_53.gif)
+(Video file [here](images/atrium-daytime_360_1-50_53.mp4))
 ![VID_20240914_103257_00_005-9930_9946](images/VID_20240914_103257_00_005-9930_9946.gif)
-
+(Video file [here](images/VID_20240914_103257_00_005-9930_9946.mp4))
 
 For the 2048 × 4096 resolution model, you can run the following command:
 
@@ -203,6 +207,9 @@ python -m src.paper.demo +experiment=pansplat-2048-360loc ++model.weights_path=l
 
 Example output:
 ![VID_20240922_102141_00_006-21456-21616](images/VID_20240922_102141_00_006-21456-21616.gif)
+(Video file [here](images/VID_20240922_102141_00_006-21456-21616.mp4))
+
+For more example outputs, please view the [Short Video](https://youtu.be/R3qIzL77ZSc) | [Full Video](https://youtu.be/77G9AQkweg0) | [Interactive Demo](https://youtu.be/9bKZA2zxAbw).
 
 ## Reproducing the Results
 
