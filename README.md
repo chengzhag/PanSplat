@@ -1,4 +1,5 @@
-# PanSplat
+# 🍳 PanSplat
+
 
 ### PanSplat: 4K Panorama Synthesis with Feed-Forward Gaussian Splatting
 Cheng Zhang, Haofei Xu, Qianyi Wu, Camilo Cruz Gambardella, Dinh Phung, Jianfei Cai
@@ -9,11 +10,11 @@ Cheng Zhang, Haofei Xu, Qianyi Wu, Camilo Cruz Gambardella, Dinh Phung, Jianfei 
 
 ![teaser](images/teaser.png)
 
-## Introduction
+## 🚀 Introduction
 
-This repo contains training, testing, evaluation code of our CVPR 2025 paper.
+🌍 Our method processes two wide-baseline 360° panoramas and generates a Spherical 3D Gaussian Pyramid that can be rendered into novel views. This repo contains training, testing, evaluation code of our CVPR 2025 paper.
 
-## Installation
+## 🛠️ Installation
 
 We use Anaconda to manage the environment. You can create the environment by running the following command:
 
@@ -31,7 +32,7 @@ We use wandb to log and visualize the training process. You can create an accoun
 wandb login
 ```
 
-## Quick Demo on Synthetic Data
+## ⚡ Quick Demo on Synthetic Data
 
 You can download the pretrained checkpoints [last.ckpt](https://monashuni-my.sharepoint.com/:u:/g/personal/cheng_zhang_monash_edu/EUSd23tEyjpIg-A6YMdrV-gBMSHG9hLk5zYC_Aq80csDig?e=0gMnFr) (trained on the Matterport3D dataset at 512 × 1024 resolution) and put it in the `logs/nvpl49ge/checkpoints` folder. Then run the following command to test the model:
     
@@ -55,7 +56,7 @@ python -m src.paper.demo +experiment=pansplat-2048 ++model.weights_path=logs/hxl
 
 This requires a GPU with at least 24GB of memory, e.g., NVIDIA RTX 3090.
 
-## Data Preparation
+## 📂 Data Preparation
 
 ### PanoGRF Data
 
@@ -71,7 +72,7 @@ We use the [360Loc](https://github.com/HuajianUP/360Loc?tab=readme-ov-file) data
 We provide two sample videos for testing cross-dataset generalization. Please download `insta360.tar` from [link](https://monashuni-my.sharepoint.com/:f:/g/personal/cheng_zhang_monash_edu/En3qfWTyLaNGvQnqPcA8xLYBzr3kOReqAbbgINsWXkwaMA?e=DH1M5x) and unzip it to the `datasets` folder.
 
 <details>
-<summary>Use your own video...</summary>
+<summary>🎥 Use your own video...</summary>
 
 We use [stella_vslam](https://github.com/stella-cv/stella_vslam?tab=readme-ov-file), a community fork of [xdspacelab/openvslam](https://github.com/xdspacelab/openvslam), to extract the camera poses from self-captured videos. You can follow the [official guide](https://stella-cv.readthedocs.io/en/latest/installation.html) to install the stella_vslam.
 Before building `stella_vslam_examples`, please replace the below code in the `src/run_video_slam.cc` file:
@@ -109,7 +110,7 @@ The camera poses will be saved in the `frame_trajectory.txt` file. You can then 
 </details>
 <br>
 
-## Training and Testing
+## 🎯 Training and Testing
 
 ### Pretrained Models
 
@@ -125,7 +126,7 @@ Please first run the following command to train the model at 256 × 512 resoluti
 python -m src.main +experiment=pansplat-256 mode=train
 ```
 
-**Hint:** The training takes about 1 day on a single NVIDIA A100 GPU. Experiments are logged and visualized to wandb under the pansplat project. You'll get a WANDB_RUN_ID (e.g., ek6ab466) after running the command. Or you can find it in the wandb dashboard. At the end of the training, the model will be tested and the evaluation results will be logged to wandb as table. The checkpoints are saved in the logs/<WANDB_RUN_ID>/checkpoints folder. Same for the following experiments.
+ℹ️ **Hint:** The training takes about 1 day on a single NVIDIA A100 GPU. Experiments are logged and visualized to wandb under the pansplat project. You'll get a WANDB_RUN_ID (e.g., ek6ab466) after running the command. Or you can find it in the wandb dashboard. At the end of the training, the model will be tested and the evaluation results will be logged to wandb as table. The checkpoints are saved in the logs/<WANDB_RUN_ID>/checkpoints folder. Same for the following experiments.
 
 Please then replace the `model.weights_path` parameter of `config/pansplat-512.yaml` with the path to the last checkpoint of the 256 × 512 resolution training and run the following command to fine-tune the model at 512 × 1024 resolution:
 
@@ -134,7 +135,7 @@ python -m src.main +experiment=pansplat-512 mode=train
 ```
 
 <details>
-<summary>If you want to fine-tune on high resolution Matterport3D data...</summary>
+<summary>🏞 If you want to fine-tune on high resolution Matterport3D data...</summary>
 
 Similarly, update the `model.weights_path` settings in `config/pansplat-1024.yaml` and fine-tune the model at 1024 × 2048 resolution:
 
@@ -171,7 +172,7 @@ python -m src.main +experiment=pansplat-2048-360loc mode=train
 
 Remember to update the `model.weights_path` parameter in the corresponding config files before running the commands.
 
-## Demo on Real-World Data
+## 🌍 Demo on Real-World Data
 
 First please make sure you have followed the steps in the [Fine-tune on 360Loc](#fine-tune-on-360loc) section to have the checkpoints ready.
 You can then test the model on the 360Loc or Insta360 dataset by running the following command:
@@ -181,7 +182,7 @@ python -m src.paper.demo +experiment=pansplat-512-360loc ++model.weights_path=lo
 python -m src.paper.demo +experiment=pansplat-512-360loc ++model.weights_path=logs/ls933m5x/checkpoints/last.ckpt mode=predict dataset=insta360
 ```
 
-**Hint:** You can replace the `model.weights_path` parameter with what you have fine-tuned.
+ℹ️ **Hint:** You can replace the `model.weights_path` parameter with what you have fine-tuned.
 
 The output will be saved in the folder with the format `outputs/2025-01-13/16-56-04`:
 ![atrium-daytime_360_1-50_53](images/atrium-daytime_360_1-50_53.gif)
@@ -211,7 +212,7 @@ Example output:
 
 For more example outputs, please view the [Short Video](https://youtu.be/R3qIzL77ZSc) | [Full Video](https://youtu.be/77G9AQkweg0) | [Interactive Demo](https://youtu.be/9bKZA2zxAbw).
 
-## Reproducing the Results
+## 📈 Reproducing the Results
 
 ### MVSplat Baseline
 
@@ -273,7 +274,7 @@ An example is shown below:
 ![frame_vs_metric](images/frame_vs_metric.png)
 
 
-## Citation
+## 📖 Citation
 
 If you find our work helpful, please consider citing:
 
@@ -288,3 +289,9 @@ If you find our work helpful, please consider citing:
       url={https://arxiv.org/abs/2412.12096}, 
 }
 ```
+
+## 💡 Acknowledgements
+
+Our paper cannot be completed without the amazing open-source projects [PanoGRF](https://github.com/thucz/PanoGRF), [MVSplat](https://github.com/donydchen/mvsplat), [stella_vslam](https://github.com/stella-cv/stella_vslam), [pixelSplat](https://github.com/dcharatan/pixelsplat), [UniMatch](https://github.com/autonomousvision/unimatch)...
+
+Also check out Zheng's concurrent work [Splatter360](https://github.com/thucz/splatter360) for more panorama synthesis methods.
