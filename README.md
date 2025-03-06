@@ -279,14 +279,11 @@ An example is shown below:
 If you find our work helpful, please consider citing:
 
 ```bibtex
-@misc{zhang2024pansplat4kpanoramasynthesis,
+@inproceedings{zhang2024pansplat,
       title={PanSplat: 4K Panorama Synthesis with Feed-Forward Gaussian Splatting}, 
       author={Cheng Zhang and Haofei Xu and Qianyi Wu and Camilo Cruz Gambardella and Dinh Phung and Jianfei Cai},
-      year={2024},
-      eprint={2412.12096},
-      archivePrefix={arXiv},
-      primaryClass={cs.CV},
-      url={https://arxiv.org/abs/2412.12096}, 
+      booktitle={Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition},
+      year={2025}
 }
 ```
 
