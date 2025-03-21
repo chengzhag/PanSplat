@@ -7,6 +7,7 @@ from lpips import LPIPS
 from skimage.metrics import structural_similarity
 from torch import Tensor
 import numpy as np
+from einops import rearrange
 
 
 @torch.no_grad()
@@ -131,7 +132,11 @@ class ImageMetrics:
         image_metrics['psnr'] = compute_psnr(rgb_gt, rgb_softmax).cpu().numpy()
         image_metrics['lpips'] = compute_lpips(rgb_gt, rgb_softmax).cpu().numpy()
         image_metrics['ssim'] = compute_ssim(rgb_gt, rgb_softmax).cpu().numpy()
-        image_metrics['ws_psnr'] = self.wspsnr_calculator.ws_psnr(rgb_softmax, rgb_gt, max_val=1.0).cpu().numpy()
+        image_metrics['ws_psnr'] = self.wspsnr_calculator.ws_psnr(
+            rearrange(rgb_softmax, "b c h w -> b h w c"),
+            rearrange(rgb_gt, "b c h w -> b h w c"),
+            max_val=1.0
+        ).cpu().numpy()
         if average:
             image_metrics = {k: v.mean() for k, v in image_metrics.items()}
         return image_metrics

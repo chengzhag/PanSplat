@@ -10,6 +10,9 @@ Cheng Zhang, Haofei Xu, Qianyi Wu, Camilo Cruz Gambardella, Dinh Phung, Jianfei 
 
 ![teaser](images/teaser.png)
 
+📢 News:
+- [2025-03-25] Fixed a bug in WS-PSNR evaluation (thanks to [@qiuzidian](https://github.com/qiuzidian)'s [issue #6](https://github.com/chengzhag/PanSplat/issues/6)).
+
 ## 🚀 Introduction
 
 🌍 Our method processes two wide-baseline 360° panoramas and generates a Spherical 3D Gaussian Pyramid that can be rendered into novel views. This repo contains training, testing, evaluation code of our CVPR 2025 paper.
@@ -132,6 +135,12 @@ Please then replace the `model.weights_path` parameter of `config/pansplat-512.y
 
 ```bash
 python -m src.main +experiment=pansplat-512 mode=train
+```
+
+ℹ️ **Hint:** After the training, if you want to test the trained model again, you can run the following command:
+
+```bash
+python -m src.main +experiment=pansplat-512 ++model.weights_path=logs/<WANDB_RUN_ID>/checkpoints/last.ckpt mode=test test.compute_scores=true wandb.name=test_pansplat
 ```
 
 <details>
