@@ -73,7 +73,7 @@ We also rendered a smaller Matterport3D dataset with higher resolution for fine-
 
 ### 360Loc Data
 
-We use the [360Loc](https://github.com/HuajianUP/360Loc?tab=readme-ov-file) dataset for fine-tuning to real-world data. Please download the data from the [official link](https://hkustconnect-my.sharepoint.com/personal/cliudg_connect_ust_hk/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fcliudg%5Fconnect%5Fust%5Fhk%2FDocuments%2F360Loc%5Frelease&ga=1) and unzip the separate parts to the `datasets/360Loc` folder.
+We use the [360Loc](https://github.com/HuajianUP/360Loc?tab=readme-ov-file) dataset for fine-tuning to real-world data. Please download the data from the [official link](https://hkustconnect-my.sharepoint.com/:f:/g/personal/cliudg_connect_ust_hk/EqrMZf3qRGBEqQthBUuYKEoBc8BGCG_Gr9OPZPHxlhemGg?e=ZqmV9M) and unzip the separate parts to the `datasets/360Loc` folder.
 
 ### Our Video Data
 
