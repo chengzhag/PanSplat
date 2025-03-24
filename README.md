@@ -30,6 +30,11 @@ pip install git+https://github.com/dcharatan/diff-gaussian-rasterization-modifie
 pip3 install -U xformers==0.0.27.post2+cu118 --index-url https://download.pytorch.org/whl/cu118
 ```
 
+If you are having issue with conda solving environment, or any other issues that might be caused by the version of the packages, you can try to create the environment with specific version of the packages:
+```bash
+conda env create -f environment_strict.yaml
+```
+
 We use wandb to log and visualize the training process. You can create an account then login to wandb by running the following command:
 ```bash
 wandb login
