@@ -305,4 +305,4 @@ If you find our work helpful, please consider citing:
 
 Our paper cannot be completed without the amazing open-source projects [PanoGRF](https://github.com/thucz/PanoGRF), [MVSplat](https://github.com/donydchen/mvsplat), [stella_vslam](https://github.com/stella-cv/stella_vslam), [pixelSplat](https://github.com/dcharatan/pixelsplat), [UniMatch](https://github.com/autonomousvision/unimatch)...
 
-Also check out Zheng's concurrent work [Splatter360](https://github.com/thucz/splatter360) for more panorama synthesis methods.
+Also check out Zheng's concurrent work [Splatter360](https://github.com/thucz/splatter360) and Suyoung's concurrent work [OmniSplat](https://robot0321.github.io/omnisplat/index.html) for more panorama synthesis methods.
