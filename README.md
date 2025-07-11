@@ -230,7 +230,7 @@ For more example outputs, please view the [Short Video](https://youtu.be/R3qIzL7
 
 ### MVSplat Baseline
 
-We also provide the MVSplat baseline for comparison. You can put the [weights](https://monashuni-my.sharepoint.com/:u:/g/personal/cheng_zhang_monash_edu/EZE94CzWywVKguiHCylzf6oB0bm-NHZCUzvtUshMlvKvpg?e=uhmNfV) trained on Matterport3D dataset in `logs/qbn2ltku/checkpoints` and run the following command to test the model:
+We also provide the MVSplat baseline for comparison. You can put the [weights](https://monashuni-my.sharepoint.com/:f:/g/personal/cheng_zhang_monash_edu/EuGRXmSPcmpLhzLr49KPpB8BNxoQATnMJjwJSN_d6THDjA?e=befWJE) trained on Matterport3D dataset in `logs/qbn2ltku/checkpoints` and run the following command to test the model:
 
 ```bash
 python -m src.main +experiment=mvsplat-512 ++model.weights_path=logs/qbn2ltku/checkpoints/last.ckpt mode=test test.compute_scores=true wandb.name=test_mvsplat
