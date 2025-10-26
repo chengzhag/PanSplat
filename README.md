@@ -169,7 +169,7 @@ python -m src.main +experiment=pansplat-2048 mode=train
 
 ### Fine-tune on 360Loc
 
-We fine-tune the model on the 360Loc dataset from the weights trained on the Matterport3D dataset at 512 × 1024 resolution. If you want to skip this part, you can find the checkpoints [here](https://monashuni-my.sharepoint.com/:f:/g/personal/cheng_zhang_monash_edu/EuGRXmSPcmpLhzLr49KPpB8BNxoQATnMJjwJSN_d6THDjA?e=Ar96F4). We provide checkpoints for 512 × 1024 (`ls933m5x`) and 2048 × 4096 (`115k3hnu`) resolutions.
+We fine-tune the model on the 360Loc dataset from the weights trained on the Matterport3D dataset at 512 × 1024 resolution. If you want to skip this part, you can find the checkpoints [here](https://monashuni-my.sharepoint.com/:f:/g/personal/cheng_zhang_monash_edu/EuGRXmSPcmpLhzLr49KPpB8BNxoQATnMJjwJSN_d6THDjA?e=Ar96F4). We provide checkpoints for 512 × 1024 (`ls933m5x`) 1024 × 2048 (`av0ndr8h`) and 2048 × 4096 (`115k3hnu`) resolutions.
 
 Please update the `model.weights_path` parameter of `config/pansplat-512-360loc.yaml` to the path of the last checkpoint of the Matterport3D training at 512 × 1024 resolution, then run the following command:
 
