@@ -163,6 +163,8 @@ Finally, update the `model.weights_path` settings in `config/pansplat-2048.yaml`
 python -m src.main +experiment=pansplat-2048 mode=train
 ```
 
+You can find the checkpoints [here](https://monashuni-my.sharepoint.com/:f:/g/personal/cheng_zhang_monash_edu/EuGRXmSPcmpLhzLr49KPpB8BNxoQATnMJjwJSN_d6THDjA?e=Ar96F4). We provide checkpoints for 1024 × 2048 (`7mvdvk6t`) and 2048 × 4096 (`2irh9yi0`) resolutions.
+
 </details>
 <br>
 
